@@ -23,22 +23,43 @@ class Chess:
         for y in range(self.BOARD_START, self.BOARD_START + self.BOARD_SIZE, self.TILE_SIZE):
             for x in range(self.BOARD_START, self.BOARD_START + self.BOARD_SIZE, self.TILE_SIZE):
                 self.add_board_tile(x, y, tile)
-                if location[1] in [7, 8]:
-                    self.add_game_piece(x, y, location, 'white')
-                elif location[1] in [1, 2]:
-                    self.add_game_piece(x, y, location, 'black')
+                self.conditionally_add_game_piece(x, y, location)
 
                 tile = (tile + 1) % 2
                 location[0] += 1
             tile = (tile + 1) % 2
-            location[0] = 0
+            location[0] = 1
             location[1] += 1
 
     def add_board_tile(self, x, y, tile):
         self.board.append(BoardTile(self.canvas, tile, x=x, y=y, size=self.TILE_SIZE))
 
-    def add_game_piece(self, x, y, location, colour):
-        piece = Piece((location[0], location[1]), 'king', colour)
+    def conditionally_add_game_piece(self, x, y, location):
+        colour = None
+        piece = None
+        if location[1] in [7, 8]:
+            colour = "white"
+        elif location[1] in [1, 2]:
+            colour = "black"
+
+        if location[1] in [2, 7]:
+            piece = 'pawn'
+        elif location[0] in [1, 8]:
+            piece = 'rook'
+        elif location[0] in [2, 7]:
+            piece = 'knight'
+        elif location[0] in [3, 6]:
+            piece = 'bishop'
+        elif location[0] == 4:
+            piece = 'king'
+        elif location[0] == 5:
+            piece = 'queen'
+
+        if colour is not None and piece is not None:
+            self.add_game_piece(x, y, location, piece, colour)
+
+    def add_game_piece(self, x, y, location, piece, colour):
+        piece = Piece((location[0], location[1]), piece, colour)
         self.pieces.append(piece)
         piece.inital_draw(self.canvas, x, y)
 
