@@ -107,8 +107,8 @@ class Piece:
     def __init__(self, position, piece, colour, **kwargs):
         self.position = position
         self.piece_moves = []
-        self.size = self._get_size(kwargs)
         # a list of tuples (1, 0) and (2, 0) for a pawn on first go, context-free added to position
+        self.size = self._get_size(kwargs)
         self.piece = piece
         self.colour = colour
         self.sprite = self._get_sprite()
@@ -138,6 +138,10 @@ class Piece:
     def inital_draw(self, canvas, x, y):
         canvas.create_image(x, y, image=self.sprite, anchor="nw")
 
+
+class Pawn(Piece):
+    def __init__(self, position, colour, **kwargs):
+        super(Pawn, self).__init__(position, 'pawn', colour, **kwargs)
 
 
 Chess()
