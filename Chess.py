@@ -59,9 +59,10 @@ class Chess:
             self.add_game_piece(x, y, location, piece, colour)
 
     def add_game_piece(self, x, y, location, piece, colour):
-        piece = Piece((location[0], location[1]), piece, colour)
+        offset = 10
+        piece = Piece((location[0], location[1]), piece, colour, size=self.TILE_SIZE-offset)
         self.pieces.append(piece)
-        piece.inital_draw(self.canvas, x, y)
+        piece.inital_draw(self.canvas, x + offset/2, y + offset/2)
 
 
 class BoardTile:
