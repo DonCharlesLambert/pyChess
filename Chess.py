@@ -22,7 +22,7 @@ class Chess:
         location = [1, 1]
         for y in range(self.BOARD_START, self.BOARD_START + self.BOARD_SIZE, self.TILE_SIZE):
             for x in range(self.BOARD_START, self.BOARD_START + self.BOARD_SIZE, self.TILE_SIZE):
-                self.add_board_tile(x, y, tile)
+                self.add_board_tile(x, y, location, tile)
                 self.conditionally_add_game_piece(x, y, location)
 
                 tile = (tile + 1) % 2
@@ -31,8 +31,8 @@ class Chess:
             location[0] = 1
             location[1] += 1
 
-    def add_board_tile(self, x, y, tile):
-        self.board.append(BoardTile(self.canvas, tile, x=x, y=y, size=self.TILE_SIZE))
+    def add_board_tile(self, x, y, location, tile):
+        self.board.append(BoardTile((location[0], location[1]), self.canvas,tile, x=x, y=y, size=self.TILE_SIZE))
 
     def conditionally_add_game_piece(self, x, y, location):
         colour = None
@@ -65,17 +65,23 @@ class Chess:
         piece.inital_draw(self.canvas, x + offset/2, y + offset/2)
 
 
+    # click handler: loops through pieces list to see if a piece was clicked
+    # if a piece is clicked return the available moves
+    # use the board list to change colour of available tiles
+    # use states
+
 class BoardTile:
     LIGHT_BROWN = 0
     DARK_BROWN = 1
     LIGHT_GREY = 2
     DARK_GREY = 3
 
-    def __init__(self, canvas, tile, **kwargs):
+    def __init__(self, location, canvas, tile, **kwargs):
         directory = self._get_tile_directory(tile)
         self.canvas = canvas
         self.size = self._get_size(kwargs)
         self.sprite = self._resize(directory, self.size, self.size)
+        self.location = location
         self.canvas_image = self.canvas.create_image(kwargs['x'], kwargs['y'], image=self.sprite, anchor="nw")
 
     def _get_tile_directory(self, tile):
